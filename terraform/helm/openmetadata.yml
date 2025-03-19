@@ -1,0 +1,54 @@
+# values.yaml
+openmetadata:
+  config:
+    host: "http://openmetadata-service.default.svc.cluster.local"
+    database:
+      host: "openmetadata-postgres" 
+      port: 5432
+      dbName: "openmetadata"
+      user: "openmetadata-user"
+      passwordSecret: "openmetadata-db-secret"
+      passwordKey: "db-password"
+      driverClass: "org.postgresql.Driver"
+      dbScheme: "postgresql"
+    
+    authentication:
+      provider: "no-auth"
+      publicKey: ""
+      authority: ""
+      clientId: ""
+    
+    airflow:
+      enabled: true
+      apiEndpoint: "http://airflow.openmetadata.svc.cluster.local/api/v1"
+
+  service:
+    type: LoadBalancer
+    ports:
+      api: 8585
+      ui: 80
+
+  postgresql:
+    enabled: false  # Disable bundled PostgreSQL
+
+  elasticsearch:
+    enabled: false  # Disable if using external ES
+
+  redis:
+    enabled: false  # Disable if using external Redis
+
+  ingress:
+    enabled: false
+
+  resources:
+    requests:
+      memory: "2Gi"
+      cpu: "1000m"
+    limits:
+      memory: "4Gi"
+      cpu: "2000m"
+
+serviceAccount:
+  create: true
+  annotations:
+    iam.gke.io/gcp-service-account: "cloudsql-proxy-sa@${var.project_id}.iam.gserviceaccount.com"

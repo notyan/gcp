@@ -80,7 +80,7 @@ resource "google_compute_firewall" "allow_external" {
     protocol = "all"
   }
 
-  source_ranges = [ "10.10.0.0/16"  ]
+  source_ranges = ["10.10.0.0/16"]
 }
 resource "google_compute_firewall" "allow_transit" {
   provider = google.mitsui-id-net
@@ -91,7 +91,7 @@ resource "google_compute_firewall" "allow_transit" {
     protocol = "all"
   }
 
-  source_ranges = [ "10.10.0.0/16"  ]
+  source_ranges = ["10.10.0.0/16"]
 }
 
 resource "google_compute_firewall" "allow_prod" {
@@ -103,7 +103,7 @@ resource "google_compute_firewall" "allow_prod" {
     protocol = "all"
   }
 
-  source_ranges = [ "10.10.0.0/16"  ]
+  source_ranges = ["10.10.0.0/16"]
 }
 
 # ======================= FOR CLOUD VPN PEERING ============================
@@ -171,4 +171,21 @@ resource "google_compute_firewall" "id_allow_internal_vpn" {
   source_ranges = ["10.10.21.0/24"]
   priority      = 1000
   direction     = "INGRESS"
+}
+
+
+
+# Allow ICMP (ping) from transit VM to GKE nodes
+resource "google_compute_firewall" "allow_icmp_from_transit" {
+  provider = google.mitsui-id-core
+  project  = var.project-id-core
+  name     = "allow-icmp-from-transit"
+  network  = google_compute_network.prod_vpc.self_link
+
+  allow {
+    protocol = "icmp"
+  }
+
+  # Adjust based on your transit VM's identifiers
+  source_ranges = ["10.10.0.0/16"] # Tag on your transit VM
 }

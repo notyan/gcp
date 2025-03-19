@@ -67,7 +67,7 @@ resource "google_compute_subnetwork" "subnet_prod_id_vpc" {
     range_name    = "pod-ranges"
     ip_cidr_range = "10.10.5.0/24"
   }
-  
+
   secondary_ip_range {
     range_name    = "services-ranges"
     ip_cidr_range = "10.10.6.0/24"
@@ -112,13 +112,13 @@ resource "google_compute_subnetwork" "subnet_external_jp_vpc" {
 
 # Enable Shared VPC in host project
 resource "google_compute_shared_vpc_host_project" "host" {
-  provider      = google.mitsui-id-net
-  project = var.project-id-net
+  provider = google.mitsui-id-net
+  project  = var.project-id-net
 }
 
 # Attach service project to Shared VPC
 resource "google_compute_shared_vpc_service_project" "service_project" {
-  provider      = google.mitsui-id-net
+  provider        = google.mitsui-id-net
   host_project    = google_compute_shared_vpc_host_project.host.project
   service_project = var.project-id-core
 }

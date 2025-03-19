@@ -5,11 +5,11 @@ resource "google_sql_database_instance" "postgres_instance" {
   database_version = "POSTGRES_16"
   root_password    = "abcABC123!"
 
-    timeouts {
-      create = "10m"
-      update = "10m"
-      delete = "10m"
-    }
+  timeouts {
+    create = "10m"
+    update = "10m"
+    delete = "10m"
+  }
 
   settings {
     edition           = "ENTERPRISE"
@@ -36,18 +36,25 @@ resource "google_sql_database_instance" "postgres_instance" {
 }
 
 
-resource "google_sql_database" "default" {
+resource "google_sql_database" "om_db" {
   provider = google.mitsui-jp-net
-  name     = "mydatabase"
+  name     = "openmetadata"
   instance = google_sql_database_instance.postgres_instance.name
 }
 
-resource "google_sql_user" "default" {
-  provider = google.mitsui-jp-net
-  name     = "myuser"
-  instance = google_sql_database_instance.postgres_instance.name
-  password = "temp-password-123!"
+# Create database user
+resource "random_password" "om_db_password" {
+  length  = 16
+  special = false
 }
+
+resource "google_sql_user" "om_db_user" {
+  provider = google.mitsui-jp-net
+  name     = "openmetadata-user"
+  instance = google_sql_database_instance.postgres_instance.name
+  password = random_password.om_db_password.result
+}
+
 
 output "public_ip" {
   value = google_sql_database_instance.postgres_instance.public_ip_address

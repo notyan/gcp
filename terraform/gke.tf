@@ -1,9 +1,9 @@
 # Create private GKE cluster in Shared VPC
 resource "google_container_cluster" "private_cluster" {
-  provider = google-beta.mitsui-id-core
-  name     = "private-cluster"
-  location = var.region-id
-    remove_default_node_pool = true
+  provider                 = google-beta.mitsui-id-core
+  name                     = "private-cluster"
+  location                 = var.region-id
+  remove_default_node_pool = true
   # Shared VPC configuration
   network    = google_compute_network.prod_vpc.self_link
   subnetwork = google_compute_subnetwork.subnet_prod_vpc.self_link
@@ -18,7 +18,7 @@ resource "google_container_cluster" "private_cluster" {
   # Node configuration
   node_config {
     tags = ["gke-node"]
-    
+
     # Customize these values as needed
     machine_type = "e2-micro"
     disk_size_gb = 40
@@ -35,21 +35,21 @@ resource "google_container_cluster" "private_cluster" {
       display_name = "temp-access"
     }
   }
-    deletion_protection = false
+  deletion_protection = false
   # Required for Terraform to remove default node pool
-  initial_node_count       = 1
+  initial_node_count = 1
 }
 
 # Create a separate node pool
 resource "google_container_node_pool" "primary_nodes" {
-  provider = google-beta.mitsui-id-core
+  provider   = google-beta.mitsui-id-core
   name       = "primary-node-pool"
   location   = var.region-id
   cluster    = google_container_cluster.private_cluster.name
   node_count = 2
 
   node_config {
-    tags       = ["gke-node"]
+    tags         = ["gke-node"]
     machine_type = "e2-micro"
     disk_size_gb = 50
     oauth_scopes = [
@@ -71,7 +71,7 @@ provider "kubernetes" {
 
 # Expose a service with LoadBalancer
 resource "kubernetes_service" "example" {
-  provider   = kubernetes
+  provider = kubernetes
   metadata {
     name = "example-service"
   }
