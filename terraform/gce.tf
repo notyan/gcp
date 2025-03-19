@@ -1,41 +1,3 @@
-# ============================== TRANSIT VM ==========================
-resource "google_compute_instance" "transit_vm" {
-  provider     = google.mitsui-id-net
-  project      = var.project-id-net
-  name         = "transit-vm"
-  machine_type = "e2-micro"
-
-  boot_disk {
-    initialize_params {
-      image = "debian-cloud/debian-12"
-    }
-  }
-  network_interface {
-    network    = google_compute_network.transit_id_vpc.self_link
-    stack_type = "IPV4_ONLY"
-    subnetwork = google_compute_subnetwork.subnet_transit_id_vpc.self_link
-  }
-}
-
-# ============================== External VM ==========================
-resource "google_compute_instance" "external_vm" {
-  provider     = google.mitsui-id-net
-  project      = var.project-id-net
-  name         = "external-vm"
-  machine_type = "e2-micro"
-
-  boot_disk {
-    initialize_params {
-      image = "debian-cloud/debian-11"
-    }
-  }
-  network_interface {
-    network    = google_compute_network.external_id_vpc.self_link
-    stack_type = "IPV4_ONLY"
-    subnetwork = google_compute_subnetwork.subnet_external_id_vpc.self_link
-  }
-}
-
 # ============================== POSTGRES VM ==========================
 resource "google_compute_instance" "postgresql_vm" {
   provider     = google.mitsui-jp-net
@@ -55,11 +17,11 @@ resource "google_compute_instance" "postgresql_vm" {
   }
 }
 
-# ============================== PRODUCTIOn VM ==========================
-resource "google_compute_instance" "prod_vm" {
-  provider     = google.mitsui-id-net
-  project      = var.project-id-net
-  name         = "prod-vm"
+# ============================== Elasticsearch VM ==========================
+resource "google_compute_instance" "elasticsearch_vm" {
+  provider     = google.mitsui-id-core
+  project      = var.project-id-core
+  name         = "elasticsearch-vm"
   machine_type = "e2-micro"
 
   boot_disk {
@@ -68,8 +30,8 @@ resource "google_compute_instance" "prod_vm" {
     }
   }
   network_interface {
-    network    = google_compute_network.prod_id_vpc.self_link
+    network    = google_compute_network.prod_vpc.self_link
     stack_type = "IPV4_ONLY"
-    subnetwork = google_compute_subnetwork.subnet_prod_id_vpc.self_link
+    subnetwork = google_compute_subnetwork.subnet_prod_vpc.self_link
   }
 }

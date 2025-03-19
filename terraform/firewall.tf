@@ -129,7 +129,7 @@ resource "google_compute_firewall" "jp_vpn_traffic" {
 resource "google_compute_firewall" "id_vpn_traffic" {
   provider = google.mitsui-id-net
   name     = "id-vpn-traffic"
-  network  = google_compute_network.external_id_vpc.name
+  network  = google_compute_network.transit_id_vpc.name
 
   allow {
     protocol = "udp"
@@ -154,7 +154,7 @@ resource "google_compute_firewall" "jp_allow_internal_vpn" {
     protocol = "all"
   }
 
-  source_ranges = ["10.10.3.0/24"]
+  source_ranges = ["10.10.2.0/24"]
   priority      = 1000
   direction     = "INGRESS"
 }
@@ -162,7 +162,7 @@ resource "google_compute_firewall" "jp_allow_internal_vpn" {
 resource "google_compute_firewall" "id_allow_internal_vpn" {
   provider = google.mitsui-id-net
   name     = "id-allow-internal-vpn"
-  network  = google_compute_network.external_id_vpc.name
+  network  = google_compute_network.transit_id_vpc.name
 
   allow {
     protocol = "all"
